@@ -14,8 +14,8 @@ class dog():
             self.name)                                                              #intro
 
     def behaviour():                                                                #dog's random behaviour method
-        global happiness
-        if happiness == 0:
+        global happiness, chron
+        if happiness == 0 or chron >=10:
             return
         b = randint(1, 3)
         if (b == 4):
@@ -32,7 +32,9 @@ class dog():
         elif (b == 1):
             jessie.state = dog.state[1]
             return "Jessie is sad."
-      
+        
+        if chron >= 10 or hapiness == 0:
+            return
 
 
 #------------------------------GLOBAL VARS--------------------------------------------#
@@ -55,9 +57,11 @@ def timer():                                                                    
     time.sleep(1)
     sys.exit(0)
 
-def checkinput():                                                               # your interaction with the dog - evaluation of your actions
-    while True:
-        global p, rtime, happiness, chron, highscore
+def checkinput():                     
+    global p, rtime, happiness, chron, highscore# your interaction with the dog - evaluation of your actions
+    while chron <=10 or hapiness == 0:
+        if happiness == 0 or chron >=10:
+            break
         rtime = randint(3, 5)
         p = input()
         if chron < rtime -1: 
@@ -68,6 +72,7 @@ def checkinput():                                                               
             if happiness == 0:
                 chron = 11
                 break
+                
             
         elif jessie.state == dog.state[3] and p == 'f' or jessie.state == dog.state[2] and p == 'p' or jessie.state == dog.state[1] and p == 'p':
              jessie.state == dog.state[0]
@@ -79,7 +84,7 @@ def checkinput():                                                               
         chron = 0
         if p == 'q' or happiness == 0 :
             chron = 11   # thread kill hardcode
-            return
+        return
 
 def bhv():    # displaying dog behaiour
     global rtime, chron
