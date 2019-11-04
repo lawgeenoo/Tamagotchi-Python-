@@ -1,20 +1,27 @@
-from random import randint
+import threading
 import time
 import sys
+from random import randint
 
-
-class dog:
+#--------------- CLASSES & METHODS---------------------------#
+class dog():
     def __init__(self, name, state):
         dog.name = name
-        dog.state = ["happy", "sad", "bored", "hungry"]
+        dog.state = ["happy", "sad", "bored", "hungry", "abandoned", "disturbed"]    # init dog name and attributes
 
     def pr(self):
         return '{} is a good dog, take care of her. Iti va zice cand e bai. :) \n f - feed, p -play or pet, q - quit'.format(
-            self.name)
+            self.name)                                                              #intro
 
-    def behaviour():
+    def behaviour():                                                                #dog's random behaviour method
+        global happiness
+        if happiness == 0:
+            return
         b = randint(1, 3)
-        if (b == 3):
+        if (b == 4):
+          jessie.state = dog.state[4]
+          return "Jessie felt abandoned and left home."
+        elif (b == 3):
             jessie.state = dog.state[3]
             return "Jessie is hungry."
 
@@ -25,51 +32,69 @@ class dog:
         elif (b == 1):
             jessie.state = dog.state[1]
             return "Jessie is sad."
+      
 
 
-def menu():
-    i = input()
-    if (i == '1'):
-        pass
-    elif (i == '2'):
-        sys.exit(0)
-    else:
-        print("invalid request")
-        menu()
-        
-happiness = 5
-jessie = dog("Jessie", 0)
-print("1 - Start\n 2 - Quit")
-menu()
-print(jessie.pr())
-while (1):
-    rtime = randint(0, 10)
-    time.sleep(rtime)
-    print(dog.behaviour())
-    start = time.time()
-    you = input()
-    if (you == 'q'):
-        sys.exit()
-    end = time.time()
-    if (int(end - start) >= 30):
-        print("You took too long, Jessie felt abandoned and left home.")
-        sys.exit(0)
-    else:
-        pass
-    if ((jessie.state == dog.state[3]) and (you == 'f')) or (
-        (jessie.state == dog.state[2] or jessie.state == dog.state[1]) and
-        (you == 'p')):
-        jessie.state = dog.state[0]
-        print("Jessie is happy.")
-    elif (you == 'q'):
-        sys.exit()
-    else:
-        print("Jessie ain't happy, she wanted something else. ")
-        happiness = happiness - 1
-    if (happiness == 0):
-        print("Jessie got pissed so she ate you.")
-        time.sleep(3)
-        sys.exit()
+#------------------------------GLOBAL VARS--------------------------------------------#
+p = None    #input variable 
+chron = 0   #the chronometer/timer variable
+happiness = 5   #happiness variable, once to 0 dog leaves.
+jessie = dog("Jessie", 0) #intialization of the dog "object"
+highscore = 0               #your final score
 
-    rtime = randint(0, 10)
-    time.sleep(rtime)
+print(jessie.pr())     
+
+def timer():                                                                    # threaded timer, dog will leave if left unnatended
+    global chron
+    while chron <=10:    
+      chron = chron + 1
+      time.sleep(1)
+    print(dog.name, "got upset and left.")
+    print("HiScore: ", highscore)
+    chron = 11
+    time.sleep(1)
+    sys.exit(0)
+
+def checkinput():                                                               # your interaction with the dog - evaluation of your actions
+    while True:
+        global p, rtime, happiness, chron, highscore
+        rtime = randint(3, 5)
+        p = input()
+        if chron < rtime -1: 
+            print("You disturbed Jessie.")
+            happiness = happiness - 1
+            chron = 0
+            rtime = randint(3,5)
+            if happiness == 0:
+                chron = 11
+                break
+            
+        elif jessie.state == dog.state[3] and p == 'f' or jessie.state == dog.state[2] and p == 'p' or jessie.state == dog.state[1] and p == 'p':
+             jessie.state == dog.state[0]
+             print("Jessie is happy.")
+             highscore = highscore + 1
+        else:
+            print("That's not what Jessie wanted.")
+            happiness = happiness + 1
+        chron = 0
+        if p == 'q' or happiness == 0 :
+            chron = 11   # thread kill hardcode
+            return
+
+def bhv():    # displaying dog behaiour
+    global rtime, chron
+    while True: 
+            time.sleep(rtime)
+            print(dog.behaviour())
+            rtime = randint(3, 5)
+            if chron == 11:
+                break
+#----------------------------------THREADS----------------------#
+t = threading.Thread(target = timer)
+c = threading.Thread(target = checkinput)
+b = threading.Thread(target = bhv)
+t.start()
+c.start()
+b.start()
+
+
