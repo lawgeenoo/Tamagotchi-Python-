@@ -6,3 +6,4 @@ The code itself is a bit messy, as I pretty much started it from scratch with al
 
 Later:
  -included multithreading.
+ - bug: thread still running after game is over.
