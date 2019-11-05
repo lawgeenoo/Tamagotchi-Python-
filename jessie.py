@@ -15,7 +15,7 @@ class dog():
 
     def behaviour():                                                                #dog's random behaviour method
         global happiness, chron
-        if happiness == 0 or chron >=10:
+        if happiness == 0 or chron>= 11:
             return
         b = randint(1, 3)
         if (b == 4):
@@ -32,9 +32,9 @@ class dog():
         elif (b == 1):
             jessie.state = dog.state[1]
             return "Jessie is sad."
-        
-        if chron >= 10 or hapiness == 0:
+        if chron > 10:
             return
+      
 
 
 #------------------------------GLOBAL VARS--------------------------------------------#
@@ -52,16 +52,15 @@ def timer():                                                                    
       chron = chron + 1
       time.sleep(1)
     print(dog.name, "got upset and left.")
+    happiness == 0
     print("HiScore: ", highscore)
     chron = 11
     time.sleep(1)
     sys.exit(0)
 
-def checkinput():                     
-    global p, rtime, happiness, chron, highscore# your interaction with the dog - evaluation of your actions
-    while chron <=10 or hapiness == 0:
-        if happiness == 0 or chron >=10:
-            break
+def checkinput():
+    global p, rtime, happiness, chron, highscore    # your interaction with the dog - evaluation of your actions
+    while True:
         rtime = randint(3, 5)
         p = input()
         if chron < rtime -1: 
@@ -72,7 +71,7 @@ def checkinput():
             if happiness == 0:
                 chron = 11
                 break
-                
+       
             
         elif jessie.state == dog.state[3] and p == 'f' or jessie.state == dog.state[2] and p == 'p' or jessie.state == dog.state[1] and p == 'p':
              jessie.state == dog.state[0]
@@ -80,12 +79,13 @@ def checkinput():
              highscore = highscore + 1
         else:
             print("That's not what Jessie wanted.")
-            happiness = happiness + 1
+            happiness = happiness - 1
         chron = 0
         if p == 'q' or happiness == 0 :
             chron = 11   # thread kill hardcode
-        return
-
+            return
+        
+       
 def bhv():    # displaying dog behaiour
     global rtime, chron
     while True: 
@@ -101,5 +101,3 @@ b = threading.Thread(target = bhv)
 t.start()
 c.start()
 b.start()
-
-
